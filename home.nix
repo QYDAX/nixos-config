@@ -52,6 +52,29 @@
     # '')
   ];
 
+  programs.fish = {
+    enable = true;
+
+    # Shell aliases
+    shellAliases = {
+      la = "ls -a";
+      new  = "sudo nixos-rebuild switch";
+      gc = "nix-collect-garbage -d";
+    };
+
+    # Commands run at interactive shell startup
+    interactiveShellInit = ''
+      set -g fish_greeting "" # Suppress default greeting
+    '';
+
+    # Custom functions
+    functions = {
+      mkcd = {
+        body = "mkdir -p $argv[1]; and cd $argv[1]";
+        description = "Create a directory and enter it";
+      };
+    };
+  };
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
