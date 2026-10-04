@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -12,17 +12,25 @@
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
+  boot.kernelParams = [ "usbcore.autosuspend=-1" ];
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
+  services.udev.packages = [ pkgs.android-tools ];
+  #Enable Printing
+  services.printing.enable = true;
+  services.printing.drivers = with pkgs; [
+    gutenprint
+    hplip
+    brlaser
+  ];
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -42,32 +50,46 @@
     packages = with pkgs; [
     ];
   };
-
+  services.dbus = {
+    enable = true;
+    implementation = "broker";
+  };
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 environment.systemPackages = with pkgs; [
   unzip 
-  kitty
-  nano
   fastfetch
   noctalia
   btop
   tty-clock
-  cmatrix
   git
-  unimatrix
   cava
   fish
-  kdePackages. dolphin
-#  inputs.hyprmod.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ttyper
+  inputs.hyprmod.packages.${pkgs.stdenv.hostPlatform.system}.default
+  ghostty
+  bibata-cursors
+  neo
+  android-tools
+  usbutils
+  scrcpy
+  yazi
+  gcc
+  gnumake
+  helix
+  nil
 ];    
 #Enable Hyprland
 programs.hyprland = {
   enable = true;
   xwayland.enable = true;
+  withUWSM = false;
 };
+#Enable Flakes
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
+#Enable Flatpak
 services.flatpak.enable = true; 
+#Enable Noctalia greeter
 services.displayManager.noctalia-greeter = {
   enable = true;
   settings = {
@@ -79,6 +101,19 @@ services.displayManager.noctalia-greeter = {
     name = "Bibata-Modern-Classic";
   };
 };
+  xdg.portal = {
+    enable = true;
+    wlr.enable = false;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-hyprland
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    config = {
+       common = {
+         default = [ "hyprland" "gtk" ];
+       };
+    };
+  };
   # Enable Bluetooth
   hardware.bluetooth.enable = true;
   #Home Manager;
