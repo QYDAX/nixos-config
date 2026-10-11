@@ -2,19 +2,16 @@
   description = "Nixos config flake";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
+    
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
-    
+       
     hyprmod = {
       url = "github:BlueManCZ/hyprmod";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    
-    areofyl-fetch.url = "github:areofyl/fetch";
+     };
   };
 
   outputs = { self, nixpkgs, home-manager,  ... }@inputs: 

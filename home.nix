@@ -16,40 +16,57 @@
   home.stateVersion = "26.05"; # Please read the comment before changing. 
 
 
-  imports = [ inputs.areofyl-fetch.homeManagerModules.default ];
+  imports = [
+     ];
   
-  programs.fetch = {
+  
+  programs.btop = {
     enable = true;
-    labelColor = "red";
-    info = [
-      "os"
-      "kernel"
-      "uptime"
-    ];
-    speed = 1.0;
-    spin = "xy";
+    settings = {
+        color_theme = "Default";
+        theme_background = false;
+        update_ms = 2000;
+    };      
+  };
+  
+  programs.fastfetch = {
+    enable = true;
   };
   
 
-  # The home.packages option allows you to install Nix packages into your
-  # environment.
-  home.packages = [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
-
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
+  programs.cava = {
+    enable = true;
+    settings = {
+      general = {
+        framerate = 60;
+      };
+      color = {
+        background = "default";
+        gradient = 1;
+        gradient_count = 6;
+        gradient_color_1 = "'#0284c7'";
+        gradient_color_2 = "'#0ea5e9'";
+        gradient_color_3 = "'#38bdf8'";
+        gradient_color_4 = "'#34d399'";
+        gradient_color_5 = "'#10b981'";
+        gradient_color_6 = "'#059669'";
+      };
+      smoothing = {
+        monstercat = 1;
+        waves = 0;
+        gravity = 100;
+        decay = 20;
+      };
+    };
+};
+    
+    home.packages = with pkgs; [
+      neo
+      ttyper
+      unzip
+      scrcpy
+      android-tools
+      tty-clock
   ];
 
   programs.fish = {
@@ -60,6 +77,11 @@
       la = "ls -a";
       new  = "sudo nixos-rebuild switch";
       gc = "nix-collect-garbage -d";
+      cof = "sudo hx /etc/nixos/configuration.nix";
+      hod = "sudo hx /etc/nixos/home.nix";
+      flad = "sudo hx /etc/nixos/flake.nix";
+      hack = "neo -D";
+      tab = "cd /etc/nixos";
     };
 
     # Commands run at interactive shell startup
@@ -112,4 +134,5 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+  
 }

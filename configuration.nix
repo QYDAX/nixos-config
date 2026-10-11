@@ -33,20 +33,31 @@
   };
   # Enable networking
   networking.networkmanager.enable = true;
-
+  # Enable VM
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      runAsRoot = true;
+      swtpm.enable = true;  
+    };
+  };
+  programs.virt-manager.enable = true;
+  virtualisation.spiceUSBRedirection.enable = true;
   # Set your time zone.
   time.timeZone = "America/Matamoros";
-
+  # Performance
+  powerManagement.cpuFreqGovernor = "schedutil";
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
+  programs.nano.enable = false;
   programs.fish.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."qydax" = {
     isNormalUser = true;
     shell = pkgs.fish;
     description = "qydax";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
     packages = with pkgs; [
     ];
   };
@@ -56,28 +67,18 @@
   };
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-environment.systemPackages = with pkgs; [
-  unzip 
-  fastfetch
+environment.systemPackages = with pkgs; [ 
   noctalia
-  btop
-  tty-clock
   git
-  cava
   fish
-  ttyper
   inputs.hyprmod.packages.${pkgs.stdenv.hostPlatform.system}.default
   ghostty
   bibata-cursors
-  neo
-  android-tools
   usbutils
-  scrcpy
-  yazi
-  gcc
-  gnumake
   helix
   nil
+  android-tools
+  python3
 ];    
 #Enable Hyprland
 programs.hyprland = {
@@ -98,7 +99,7 @@ services.displayManager.noctalia-greeter = {
   };
   cursorTheme = {
     package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Classic";
+    name = "Bibata-Modern-Ice";
   };
 };
   xdg.portal = {
@@ -114,6 +115,22 @@ services.displayManager.noctalia-greeter = {
        };
     };
   };
+
+  # Enable zram
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";    # "zstd" or "lz4" are recommended
+    memoryPercent = 75;    # Allocates up to 50% of RAM for compressed swap
+    priority = 100;        # Ensures zram is prioritized over physical swap disks
+  };
+  #Enable swap to avoid OOM
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 8192;
+      priority = 10;
+     }
+  ];
   # Enable Bluetooth
   hardware.bluetooth.enable = true;
   #Home Manager;
