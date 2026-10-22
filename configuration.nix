@@ -26,6 +26,13 @@
     hplip
     brlaser
   ];
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      mesa
+    ];
+  };
   services.avahi = {
     enable = true;
     nssmdns4 = true;
@@ -48,6 +55,9 @@
   time.timeZone = "America/Matamoros";
   # Performance
   powerManagement.cpuFreqGovernor = "schedutil";
+  fonts.packages = with pkgs; [
+    nerd-fonts.iosevka
+  ];
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   programs.nano.enable = false;
@@ -79,6 +89,8 @@ environment.systemPackages = with pkgs; [
   nil
   android-tools
   python3
+  nodejs
+  gcc
 ];    
 #Enable Hyprland
 programs.hyprland = {

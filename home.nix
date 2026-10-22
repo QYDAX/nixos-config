@@ -67,6 +67,7 @@
       scrcpy
       android-tools
       tty-clock
+      fetch
   ];
 
   programs.fish = {
@@ -82,6 +83,11 @@
       flad = "sudo hx /etc/nixos/flake.nix";
       hack = "neo -D";
       tab = "cd /etc/nixos";
+      nketch = "fetch --depth 0.1 -l redstar";
+      fed = "fetch --depth 0.1 --infinite";
+      nfk = "fastfetch -l redstar";
+      luad = "hx .config/hypr/hyprland.lua";
+      ghst = "hx .config/ghostty/config.ghostty";
     };
 
     # Commands run at interactive shell startup

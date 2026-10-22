@@ -15,10 +15,6 @@
   };
 
   outputs = { self, nixpkgs, home-manager,  ... }@inputs: 
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
